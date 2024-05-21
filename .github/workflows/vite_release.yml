@@ -1,0 +1,62 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Remove existing Node.js
+        run: |
+          sudo apt-get remove -y nodejs
+          sudo apt-get autoremove -y
+
+      - name: Install Node.js 21 manually
+        run: |
+          curl -sL https://deb.nodesource.com/setup_21.x | sudo -E bash -
+          sudo apt-get install -y nodejs  
+
+      - name: Check Node.js version
+        run: node --version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Get the version from the tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
+      - name: Zip dist folder with version
+        run: |
+          zip -r ./dist-${{ env.VERSION }}.zip ./dist
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist-${{ env.VERSION }}.zip
+          asset_name: dist-${{ env.VERSION }}.zip
+          asset_content_type: application/zip

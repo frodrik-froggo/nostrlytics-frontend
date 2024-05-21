@@ -1,0 +1,25 @@
+{
+  "lang": "en-EN",
+  "name": "Nostrlytics Frontend",
+  "short_name": "Nostrlytics Frontend",
+  "description": "Show analytics data about your website",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#000",
+  "background_color": "#000",
+  "icons": [
+    {
+      "src": "/favicon/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
