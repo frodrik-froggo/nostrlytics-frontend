@@ -21,7 +21,7 @@ It contains:
 1. Edit the nostrlyticsConfig inside dist/index.html.
 ```html
 <script>
-  document.nostrlyticsConfig ={
+  window.nostrlyticsConfig ={
     relays: [
       'wss://relay.damus.io',
       'wss://relay.snort.social'
